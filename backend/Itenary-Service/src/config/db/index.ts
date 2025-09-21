@@ -11,8 +11,6 @@ const defaultOptions: mongoose.ConnectOptions = {
   maxPoolSize: process.env.NODE_ENV === 'production' ? 50 : 10,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
-  // useUnifiedTopology and useNewUrlParser are default in mongoose >=6,
-  // but leaving them out is fine. TypeScript will ignore unknown props.
 };
 
 export async function connectMongoose(): Promise<typeof mongoose> {

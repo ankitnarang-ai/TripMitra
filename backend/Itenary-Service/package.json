@@ -9,9 +9,6 @@
     "build": "tsc",
     "start": "NODE_ENV=production node --enable-source-maps ./dist/index.js"
   },
-  "prisma": {
-    "seed": "tsx prisma/seeds/index.ts"
-  },
   "author": "Ankit Narang",
   "license": "ISC",
   "dependencies": {
