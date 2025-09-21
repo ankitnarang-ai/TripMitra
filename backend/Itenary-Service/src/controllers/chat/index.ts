@@ -21,33 +21,34 @@ export const sendChat = async (req: Request, res: Response) => {
     const chat = new Chat({ user_id: DEMO_USER_ID, message, sender: 'user' });
     await chat.save();
 
+    // Todo: Later call ai service/
     // Call external API
-    let externalResponse: ExternalApiResponse;
-    try {
-      const response = await axios.post<ExternalApiResponse>(NGROK_ENDPOINT, {
-        user_id: DEMO_USER_ID,
-        user_query: message
-      }, {
-        headers: { 'Content-Type': 'application/json', 'accept': 'application/json' }
-      });
+    // let externalResponse: ExternalApiResponse;
+    // try {
+    //   const response = await axios.post<ExternalApiResponse>(NGROK_ENDPOINT, {
+    //     user_id: DEMO_USER_ID,
+    //     user_query: message
+    //   }, {
+    //     headers: { 'Content-Type': 'application/json', 'accept': 'application/json' }
+    //   });
 
-      externalResponse = response.data;
+    //   externalResponse = response.data;
 
-      // Now TypeScript knows about the reply property
-      if (externalResponse?.reply) {
-        const aiChat = new Chat({ 
-          user_id: DEMO_USER_ID, 
-          message: externalResponse.reply, 
-          sender: 'ai' 
-        });
-        await aiChat.save();
-      }
-    } catch (err: any) {
-      console.error('External API failed:', err.message);
-      externalResponse = { error: err.message };
-    }
+    //   // Now TypeScript knows about the reply property
+    //   if (externalResponse?.reply) {
+    //     const aiChat = new Chat({ 
+    //       user_id: DEMO_USER_ID, 
+    //       message: externalResponse.reply, 
+    //       sender: 'ai' 
+    //     });
+    //     await aiChat.save();
+    //   }
+    // } catch (err: any) {
+    //   console.error('External API failed:', err.message);
+    //   externalResponse = { error: err.message };
+    // }
 
-    res.json({ ok: true, chat, externalResponse });
+    res.json({ ok: true, chat });
   } catch (err: any) {
     res.status(500).json({ ok: false, error: err.message });
   }
