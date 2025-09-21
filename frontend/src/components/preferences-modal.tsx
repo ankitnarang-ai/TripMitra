@@ -23,7 +23,12 @@ interface PreferencesModalProps {
   tripQuery: string;
 }
 
-export function PreferencesModal({ isOpen, onClose, onSubmit, tripQuery }: PreferencesModalProps) {
+export function PreferencesModal({ isOpen, onClose, onSubmit, tripQuery }: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (preferences: TripPreferences) => void;
+  tripQuery: string;
+}) {
   const [preferences, setPreferences] = useState<TripPreferences>({
     comfortRating: 3,
     budget: '',
@@ -32,7 +37,6 @@ export function PreferencesModal({ isOpen, onClose, onSubmit, tripQuery }: Prefe
     accommodation: '',
     activities: []
   });
-
   const [currentStep, setCurrentStep] = useState(0);
 
   const questions = [
@@ -177,7 +181,6 @@ export function PreferencesModal({ isOpen, onClose, onSubmit, tripQuery }: Prefe
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Progress Bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Step {currentStep + 1} of {questions.length}</span>
@@ -191,7 +194,6 @@ export function PreferencesModal({ isOpen, onClose, onSubmit, tripQuery }: Prefe
             </div>
           </div>
 
-          {/* Current Question */}
           <Card className="p-6">
             <div className="space-y-4">
               <div>
@@ -202,7 +204,6 @@ export function PreferencesModal({ isOpen, onClose, onSubmit, tripQuery }: Prefe
             </div>
           </Card>
 
-          {/* Navigation Buttons */}
           <div className="flex gap-2">
             <Button 
               variant="outline" 

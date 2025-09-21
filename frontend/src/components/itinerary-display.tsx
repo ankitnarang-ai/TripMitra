@@ -116,7 +116,7 @@ export function ItineraryDisplay({ itineraries, onBooking }: ItineraryDisplayPro
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-14 mt-4">
       <Accordion type="multiple" value={openItems} onValueChange={setOpenItems}>
         {itineraries.map((itinerary) => (
           <AccordionItem key={itinerary.id} value={itinerary.id} className="border rounded-lg mb-4">

@@ -1,0 +1,47 @@
+services:
+  app:
+    build:
+      context: .
+      target: ${DOCKER_TARGET:-development}
+    container_name: monitor-service
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=3002
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./src:/app/src
+      - ./prisma:/app/prisma
+    profiles:
+      - dev
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: monitor-db
+    restart: always
+    environment:
+      # Use your actual credentials from .env
+      POSTGRES_DB: ${DB_NAME}           # montior_db
+      POSTGRES_USER: ${DB_USER}         # user_service  
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # awshar@123
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - dev
+
+volumes:
+  postgres_data:
