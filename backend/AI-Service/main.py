@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from models.payload import UserQueryPayload
 
+from services.agent.response import get_response
+
 app = FastAPI()
 
 
@@ -10,6 +12,8 @@ def read_root():
 
 
 @app.post("/response")
-async def get_response(payload: UserQueryPayload):
-    return {"response": "This is a sample response"}
+async def get_agent_response(payload: UserQueryPayload):
+    
+    response = await get_response(payload)
+    return {"response": response}
 
