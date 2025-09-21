@@ -2,9 +2,10 @@
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
+import os
 
 from models.payload import UserQueryPayload
-from .intialize import trip_mitra_agent
+from .intialize import trip_mitra_agent, create_agent
 from ..database.preferences_service import PreferencesService
 
 APP_NAME="trip_mitra_agent"
@@ -16,13 +17,13 @@ async def get_response(payload: UserQueryPayload):
     try:
         # Get user preferences from MongoDB
         user_preferences = await PreferencesService.get_preferences_summary(payload.user_id)
-        
+
         # Create enhanced query with user preferences
         enhanced_query = payload.user_query
-        
+
         if user_preferences:
             preferences_context = f"""
-            
+
 User Preferences:
 - Budget: {user_preferences.get('budget', 'Not specified')}
 - Travel Style: {user_preferences.get('travel_style', 'Not specified')}
@@ -34,13 +35,17 @@ User Preferences:
 Please use these preferences to personalize the itinerary recommendations.
 """
             enhanced_query += preferences_context
-        
+
+        # Get instruction set from environment variable (default to 1 for JSON output)
+        instruction_set = int(os.getenv("AGENT_INSTRUCTION_SET", "1"))
+        agent = create_agent(instruction_set)
+
         # Session and Runner Setup
         session_service = InMemorySessionService()
         # Use 'await' to correctly create the session
         await session_service.create_session(app_name=APP_NAME, user_id=payload.user_id, session_id=f"session_{payload.user_id}")
 
-        runner = Runner(agent=trip_mitra_agent, app_name=APP_NAME, session_service=session_service)
+        runner = Runner(agent=agent, app_name=APP_NAME, session_service=session_service)
 
         # Agent Interaction
         print(f"User Query: {enhanced_query}")
@@ -54,9 +59,9 @@ Please use these preferences to personalize the itinerary recommendations.
             if event.is_final_response():
                 final_response = event.content.parts[0].text
                 print("Agent Response:", final_response)
-                
+
         return final_response
-        
+
     except Exception as e:
         print(f"Error in get_response: {e}")
         return ERROR_MESSAGE

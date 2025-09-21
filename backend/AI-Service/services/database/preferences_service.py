@@ -14,6 +14,8 @@ class PreferencesService:
             collection = await get_preferences_collection()
             preferences_doc = await collection.find_one({"user_id": user_id})
             
+            print(f"User PREFERENCE OUTPUT {preferences_doc}")
+            
             if preferences_doc:
                 # Convert ObjectId to string and remove it from the document
                 preferences_doc.pop("_id", None)
