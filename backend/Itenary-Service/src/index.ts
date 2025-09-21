@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import app from './app.js';
-import { connectMongoose, closeMongoose } from '../src/config/db/index.js'
+import { connectMongoose, closeMongoose } from './config/db/index.js'
 
 const PORT = process.env.PORT || 3001;
 
