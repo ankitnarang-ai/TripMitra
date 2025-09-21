@@ -37,7 +37,7 @@ export function ChatInterface({ onTripPlanningStart, onNewTrip, showNewTripOptio
   // API Functions (unchanged)
   const callPreferencesAPI = async (preferences: TripPreferences) => {
     try {
-      const response = await fetch('http://localhost:3001/api/preferences', {
+      const response = await fetch('https://tripmitra.onrender.com/api/preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preferences }),
@@ -52,7 +52,7 @@ export function ChatInterface({ onTripPlanningStart, onNewTrip, showNewTripOptio
 
   const callChatAPI = async (message: string) => {
     try {
-      const response = await fetch('http://localhost:3001/api/chat', {
+      const response = await fetch('https://tripmitra.onrender.com/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message }),
