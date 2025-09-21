@@ -28,7 +28,7 @@ class PreferencesService:
         """Create new user preferences"""
         try:
             collection = await get_preferences_collection()
-            preferences_dict = preferences.dict()
+            preferences_dict = preferences.model_dump()
             
             result = await collection.insert_one(preferences_dict)
             return result.inserted_id is not None
@@ -43,7 +43,7 @@ class PreferencesService:
             collection = await get_preferences_collection()
             
             # Convert to dict and remove None values
-            update_data = {k: v for k, v in preferences_update.dict().items() if v is not None}
+            update_data = {k: v for k, v in preferences_update.model_dump().items() if v is not None}
             
             if not update_data:
                 return True  # Nothing to update
